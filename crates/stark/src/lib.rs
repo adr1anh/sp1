@@ -37,6 +37,7 @@ mod types;
 mod util;
 mod verifier;
 mod word;
+pub mod utils;
 
 pub use bb31_poseidon2::*;
 pub use chip::*;

@@ -3,7 +3,7 @@ use std::borrow::{Borrow, BorrowMut};
 use p3_air::{Air, AirBuilder, BaseAir, PairBuilder};
 use p3_field::PrimeField32;
 use p3_matrix::{dense::RowMajorMatrix, Matrix};
-use sp1_core_machine::utils::pad_rows_fixed;
+use sp1_stark::utils::pad_rows_fixed;
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::MachineAir;
 

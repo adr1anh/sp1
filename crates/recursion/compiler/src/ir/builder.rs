@@ -2,8 +2,6 @@ use std::{cell::UnsafeCell, iter::Zip, ptr, vec::IntoIter};
 
 use backtrace::Backtrace;
 use p3_field::AbstractField;
-use sp1_core_machine::utils::sp1_debug_mode;
-use sp1_primitives::types::RecursionProgramType;
 
 use super::{
     Array, Config, DslIr, Ext, ExtHandle, ExtOperations, Felt, FeltHandle, FeltOperations,
@@ -45,11 +43,12 @@ impl<T> TracedVec<T> {
     /// Pushes a value to the vector and records a backtrace if SP1_DEBUG is enabled
     pub fn trace_push(&mut self, value: T) {
         self.vec.push(value);
-        if sp1_debug_mode() {
-            self.traces.push(Some(Backtrace::new_unresolved()));
-        } else {
+        // TODO(adr1anh): fix debug
+        // if sp1_debug_mode() {
+        //     self.traces.push(Some(Backtrace::new_unresolved()));
+        // } else {
             self.traces.push(None);
-        }
+        // }
     }
 
     pub fn extend<I: IntoIterator<Item = (T, Option<Backtrace>)>>(&mut self, iter: I) {
@@ -99,17 +98,16 @@ pub struct Builder<C: Config> {
     pub(crate) p2_hash_num: Var<C::N>,
     pub(crate) debug: bool,
     pub(crate) is_sub_builder: bool,
-    pub program_type: RecursionProgramType,
 }
 
 impl<C: Config> Default for Builder<C> {
     fn default() -> Self {
-        Self::new(RecursionProgramType::Core)
+        Self::new()
     }
 }
 
 impl<C: Config> Builder<C> {
-    pub fn new(program_type: RecursionProgramType) -> Self {
+    pub fn new() -> Self {
         // We need to create a temporary placeholder for the p2_hash_num variable.
         let placeholder_p2_hash_num = Var::new(0, ptr::null_mut());
 
@@ -137,7 +135,6 @@ impl<C: Config> Builder<C> {
             p2_hash_num: placeholder_p2_hash_num,
             debug: false,
             is_sub_builder: false,
-            program_type,
         };
 
         new_builder.p2_hash_num = new_builder.uninit();
@@ -150,9 +147,8 @@ impl<C: Config> Builder<C> {
         nb_public_values: Option<Var<C::N>>,
         p2_hash_num: Var<C::N>,
         debug: bool,
-        program_type: RecursionProgramType,
     ) -> Self {
-        let mut builder = Self::new(program_type);
+        let mut builder = Self::new();
         builder.inner.get_mut().variable_count = variable_count;
         builder.nb_public_values = nb_public_values;
         builder.p2_hash_num = p2_hash_num;
@@ -362,61 +358,6 @@ impl<C: Config> Builder<C> {
         self.push_op(DslIr::PrintE(dst));
     }
 
-    /// Hint the length of the next vector of variables.
-    pub fn hint_len(&mut self) -> Var<C::N> {
-        let len = self.uninit();
-        self.push_op(DslIr::HintLen(len));
-        len
-    }
-
-    /// Hint a single variable.
-    pub fn hint_var(&mut self) -> Var<C::N> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintVars(arr.clone()));
-        self.get(&arr, 0)
-    }
-
-    /// Hint a single felt.
-    pub fn hint_felt(&mut self) -> Felt<C::F> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintFelts(arr.clone()));
-        self.get(&arr, 0)
-    }
-
-    /// Hint a single ext.
-    pub fn hint_ext(&mut self) -> Ext<C::F, C::EF> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintExts(arr.clone()));
-        self.get(&arr, 0)
-    }
-
-    /// Hint a vector of variables.
-    pub fn hint_vars(&mut self) -> Array<C, Var<C::N>> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintVars(arr.clone()));
-        arr
-    }
-
-    /// Hint a vector of felts.
-    pub fn hint_felts(&mut self) -> Array<C, Felt<C::F>> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintFelts(arr.clone()));
-        arr
-    }
-
-    /// Hint a vector of exts.
-    pub fn hint_exts(&mut self) -> Array<C, Ext<C::F, C::EF>> {
-        let len = self.hint_len();
-        let arr = self.dyn_array(len);
-        self.push_op(DslIr::HintExts(arr.clone()));
-        arr
-    }
-
     pub fn witness_var(&mut self) -> Var<C::N> {
         assert!(!self.is_sub_builder, "Cannot create a witness var with a sub builder");
         let witness = self.uninit();
@@ -539,7 +480,6 @@ impl<'a, C: Config> IfBuilder<'a, C> {
             self.builder.nb_public_values,
             self.builder.p2_hash_num,
             self.builder.debug,
-            self.builder.program_type,
         );
         f(&mut f_builder);
         self.builder.p2_hash_num = f_builder.p2_hash_num;
@@ -589,7 +529,6 @@ impl<'a, C: Config> IfBuilder<'a, C> {
             self.builder.nb_public_values,
             self.builder.p2_hash_num,
             self.builder.debug,
-            self.builder.program_type,
         );
 
         // Execute the `then` and `else_then` blocks and collect the instructions.
@@ -603,7 +542,6 @@ impl<'a, C: Config> IfBuilder<'a, C> {
             self.builder.nb_public_values,
             self.builder.p2_hash_num,
             self.builder.debug,
-            self.builder.program_type,
         );
         else_f(&mut else_builder);
         self.builder.p2_hash_num = else_builder.p2_hash_num;
@@ -740,7 +678,6 @@ impl<'a, C: Config> RangeBuilder<'a, C> {
             self.builder.nb_public_values,
             self.builder.p2_hash_num,
             self.builder.debug,
-            self.builder.program_type,
         );
 
         f(loop_variable, &mut loop_body_builder);

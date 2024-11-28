@@ -3,7 +3,7 @@ use p3_air::{Air, BaseAir, PairBuilder};
 use p3_field::{extension::BinomiallyExtendable, Field, PrimeField32};
 use p3_matrix::{dense::RowMajorMatrix, Matrix};
 use p3_maybe_rayon::prelude::*;
-use sp1_core_machine::utils::next_power_of_two;
+use sp1_stark::utils::next_power_of_two;
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{ExtensionAirBuilder, MachineAir};
 use std::{borrow::BorrowMut, iter::zip};

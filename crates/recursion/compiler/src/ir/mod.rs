@@ -6,7 +6,7 @@ mod builder;
 mod collections;
 mod fold;
 mod instructions;
-mod poseidon;
+// mod poseidon;
 mod ptr;
 mod symbolic;
 mod types;

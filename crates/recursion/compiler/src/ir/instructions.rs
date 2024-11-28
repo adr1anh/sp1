@@ -1,7 +1,7 @@
 use sp1_recursion_core::air::RecursionPublicValues;
 
 use super::{
-    Array, CircuitV2FriFoldInput, CircuitV2FriFoldOutput, Config, Ext, Felt, FriFoldInput,
+    Array, CircuitV2FriFoldInput, CircuitV2FriFoldOutput, Config, Ext, Felt,
     MemIndex, Ptr, TracedVec, Usize, Var,
 };
 
@@ -201,16 +201,16 @@ pub enum DslIr<C: Config> {
 
     // Hashing.
     /// Permutes an array of baby bear elements using Poseidon2 (output = p2_permute(array)).
-    Poseidon2PermuteBabyBear(Box<(Array<C, Felt<C::F>>, Array<C, Felt<C::F>>)>),
+    // Poseidon2PermuteBabyBear(Box<(Array<C, Felt<C::F>>, Array<C, Felt<C::F>>)>),
     /// Compresses two baby bear element arrays using Poseidon2 (output = p2_compress(array1,
     /// array2)).
-    Poseidon2CompressBabyBear(
-        Box<(Array<C, Felt<C::F>>, Array<C, Felt<C::F>>, Array<C, Felt<C::F>>)>,
-    ),
+    // Poseidon2CompressBabyBear(
+    //     Box<(Array<C, Felt<C::F>>, Array<C, Felt<C::F>>, Array<C, Felt<C::F>>)>,
+    // ),
     /// Absorb an array of baby bear elements for a specified hash instance.
-    Poseidon2AbsorbBabyBear(Var<C::N>, Array<C, Felt<C::F>>),
+    // Poseidon2AbsorbBabyBear(Var<C::N>, Array<C, Felt<C::F>>),
     /// Finalize and return the hash digest of a specified hash instance.
-    Poseidon2FinalizeBabyBear(Var<C::N>, Array<C, Felt<C::F>>),
+    // Poseidon2FinalizeBabyBear(Var<C::N>, Array<C, Felt<C::F>>),
     /// Permutes an array of Bn254 elements using Poseidon2 (output = p2_permute(array)). Should
     /// only be used when target is a gnark circuit.
     CircuitPoseidon2Permute([Var<C::N>; 3]),
@@ -275,10 +275,6 @@ pub enum DslIr<C: Config> {
     CircuitCommitCommittedValuesDigest(Var<C::N>),
 
     // FRI specific instructions.
-    /// Executes a FRI fold operation. 1st field is the size of the fri fold input array.  2nd
-    /// field is the fri fold input array.  See [`FriFoldInput`] for more details.
-    FriFold(Var<C::N>, Array<C, FriFoldInput<C>>),
-    // FRI specific instructions.
     /// Executes a FRI fold operation. Input is the fri fold input array.  See [`FriFoldInput`] for
     /// more details.
     CircuitV2FriFold(Box<(CircuitV2FriFoldOutput<C>, CircuitV2FriFoldInput<C>)>),
@@ -312,7 +308,6 @@ pub enum DslIr<C: Config> {
     CycleTrackerV2Exit,
 
     // Reverse bits exponentiation.
-    ExpReverseBitsLen(Ptr<C::N>, Var<C::N>, Var<C::N>),
     /// Reverse bits exponentiation. Output, base, exponent bits.
     CircuitV2ExpReverseBits(Felt<C::F>, Felt<C::F>, Vec<Felt<C::F>>),
 }

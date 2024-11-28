@@ -3,7 +3,6 @@ use std::{fs::File, path::Path};
 use anyhow::Result;
 use clap::ValueEnum;
 use p3_baby_bear::BabyBear;
-use p3_bn254_fr::Bn254Fr;
 use p3_commit::{Pcs, TwoAdicMultiplicativeCoset};
 use p3_field::{AbstractField, PrimeField, PrimeField32, TwoAdicField};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -14,13 +13,11 @@ use sp1_recursion_circuit::machine::{
     SP1CompressWitnessValues, SP1DeferredWitnessValues, SP1RecursionWitnessValues,
 };
 
-use sp1_recursion_gnark_ffi::proof::{Groth16Bn254Proof, PlonkBn254Proof};
-
 use sp1_stark::{ShardProof, StarkGenericConfig, StarkProvingKey, StarkVerifyingKey, DIGEST_SIZE};
 use thiserror::Error;
 
 use crate::{
-    utils::{babybears_to_bn254, words_to_bytes_be},
+    utils::{ words_to_bytes_be},
     CoreSC, InnerSC,
 };
 
@@ -46,10 +43,6 @@ pub trait HashableKey {
 
     /// Hash the key into a digest of  u32 elements.
     fn hash_u32(&self) -> [u32; DIGEST_SIZE];
-
-    fn hash_bn254(&self) -> Bn254Fr {
-        babybears_to_bn254(&self.hash_babybear())
-    }
 
     fn bytes32(&self) -> String {
         let vkey_digest_bn254 = self.hash_bn254();
@@ -141,48 +134,11 @@ pub type SP1CoreProof = SP1ProofWithMetadata<SP1CoreProofData>;
 /// within SP1 programs.
 pub type SP1ReducedProof = SP1ProofWithMetadata<SP1ReducedProofData>;
 
-/// An SP1 proof that has been wrapped into a single PLONK proof and can be verified onchain.
-pub type SP1PlonkBn254Proof = SP1ProofWithMetadata<SP1PlonkBn254ProofData>;
-
-/// An SP1 proof that has been wrapped into a single Groth16 proof and can be verified onchain.
-pub type SP1Groth16Bn254Proof = SP1ProofWithMetadata<SP1Groth16Bn254ProofData>;
-
-/// An SP1 proof that has been wrapped into a single proof and can be verified onchain.
-pub type SP1Proof = SP1ProofWithMetadata<SP1Bn254ProofData>;
-
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SP1CoreProofData(pub Vec<ShardProof<CoreSC>>);
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SP1ReducedProofData(pub ShardProof<InnerSC>);
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SP1PlonkBn254ProofData(pub PlonkBn254Proof);
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SP1Groth16Bn254ProofData(pub Groth16Bn254Proof);
-
-#[derive(Serialize, Deserialize, Clone)]
-pub enum SP1Bn254ProofData {
-    Plonk(PlonkBn254Proof),
-    Groth16(Groth16Bn254Proof),
-}
-
-impl SP1Bn254ProofData {
-    pub fn get_proof_system(&self) -> ProofSystem {
-        match self {
-            SP1Bn254ProofData::Plonk(_) => ProofSystem::Plonk,
-            SP1Bn254ProofData::Groth16(_) => ProofSystem::Groth16,
-        }
-    }
-
-    pub fn get_raw_proof(&self) -> &str {
-        match self {
-            SP1Bn254ProofData::Plonk(proof) => &proof.raw_proof,
-            SP1Bn254ProofData::Groth16(proof) => &proof.raw_proof,
-        }
-    }
-}
 
 #[derive(Debug, Default, Clone, ValueEnum, PartialEq, Eq)]
 pub enum ProverMode {
@@ -192,21 +148,6 @@ pub enum ProverMode {
     Network,
     #[value(skip)]
     Mock,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ProofSystem {
-    Plonk,
-    Groth16,
-}
-
-impl ProofSystem {
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            ProofSystem::Plonk => "Plonk",
-            ProofSystem::Groth16 => "Groth16",
-        }
-    }
 }
 
 /// A proof that can be reduced along with other proofs into one proof.

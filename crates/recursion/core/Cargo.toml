@@ -21,7 +21,6 @@ p3-symmetric = { workspace = true }
 sp1-derive = { workspace = true }
 sp1-primitives = { workspace = true }
 tracing = { workspace = true }
-sp1-core-machine = { workspace = true }
 sp1-stark = { workspace = true }
 hashbrown = { workspace = true, features = ["serde"] }
 itertools = { workspace = true }

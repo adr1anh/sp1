@@ -5,7 +5,7 @@ use itertools::Itertools;
 use p3_field::{
     AbstractExtensionField, AbstractField, Field, PrimeField, PrimeField64, TwoAdicField,
 };
-use sp1_core_machine::utils::{sp1_debug_mode, SpanBuilder};
+// use sp1_core_machine::utils::{sp1_debug_mode, SpanBuilder};
 use sp1_recursion_core::{
     air::{Block, RecursionPublicValues, RECURSIVE_PROOF_NUM_PV_ELTS},
     BaseAluInstr, BaseAluOpcode,
@@ -519,7 +519,53 @@ where
             }
             DslIr::CycleTrackerV2Exit => consumer(Err(CompileOneErr::CycleTrackerExit)),
             DslIr::ReduceE(_) => {}
-            instr => consumer(Err(CompileOneErr::Unsupported(instr))),
+            // instr => consumer(Err(CompileOneErr::Unsupported(instr))),
+            DslIr::For(_) => {}
+            DslIr::IfEq(_) => {}
+            DslIr::IfNe(_) => {}
+            DslIr::IfEqI(_) => {}
+            DslIr::IfNeI(_) => {}
+            DslIr::Break => {}
+            DslIr::Alloc(_, _, _) => {}
+            DslIr::LoadV(_, _, _) => {}
+            DslIr::LoadF(_, _, _) => {}
+            DslIr::LoadE(_, _, _) => {}
+            DslIr::StoreV(_, _, _) => {}
+            DslIr::StoreF(_, _, _) => {}
+            DslIr::StoreE(_, _, _) => {}
+            DslIr::CircuitNum2BitsV(_, _, _) => {}
+            DslIr::CircuitNum2BitsF(_, _) => {}
+            DslIr::CircuitFelt2Var(_, _) => {}
+            // DslIr::Poseidon2PermuteBabyBear(_) => {}
+            // DslIr::Poseidon2CompressBabyBear(_) => {}
+            // DslIr::Poseidon2AbsorbBabyBear(_, _) => {}
+            // DslIr::Poseidon2FinalizeBabyBear(_, _) => {}
+            DslIr::CircuitPoseidon2Permute(_) => {}
+            DslIr::CircuitPoseidon2PermuteBabyBear(_) => {}
+            DslIr::HintBitsU(_, _) => {}
+            DslIr::HintBitsV(_, _) => {}
+            DslIr::HintBitsF(_, _) => {}
+            DslIr::Error() => {}
+            DslIr::HintExt2Felt(_, _) => {}
+            DslIr::HintLen(_) => {}
+            DslIr::HintVars(_) => {}
+            DslIr::HintFelts(_) => {}
+            DslIr::HintExts(_) => {}
+            DslIr::WitnessVar(_, _) => {}
+            DslIr::WitnessFelt(_, _) => {}
+            DslIr::WitnessExt(_, _) => {}
+            DslIr::Commit(_, _) => {}
+            DslIr::RegisterPublicValue(_) => {}
+            DslIr::Halt => {}
+            DslIr::CircuitCommitVkeyHash(_) => {}
+            DslIr::CircuitCommitCommittedValuesDigest(_) => {}
+            DslIr::CircuitSelectV(_, _, _, _) => {}
+            DslIr::CircuitSelectF(_, _, _, _) => {}
+            DslIr::CircuitSelectE(_, _, _, _) => {}
+            DslIr::CircuitFelts2Ext(_, _) => {}
+            DslIr::LessThan(_, _, _) => {}
+            DslIr::CycleTracker(_) => {}
+            // DslIr::ExpReverseBitsLen(_, _, _) => {}
         }
     }
 
@@ -531,38 +577,40 @@ where
     {
         // In debug mode, we perform cycle tracking and keep track of backtraces.
         // Otherwise, we ignore cycle tracking instructions and pass around an empty Vec of traces.
-        let debug_mode = sp1_debug_mode();
+        let debug_mode = false;
+        // let debug_mode = sp1_debug_mode();
         // Compile each IR instruction into a list of ASM instructions, then combine them.
         // This step also counts the number of times each address is read from.
         let (mut instrs, traces) = tracing::debug_span!("compile_one loop").in_scope(|| {
             let mut instrs = Vec::with_capacity(PREALLOC_INSTRUCTIONS);
             let mut traces = vec![];
-            if debug_mode {
-                let mut span_builder =
-                    SpanBuilder::<_, &'static str>::new("cycle_tracker".to_string());
-                for (ir_instr, trace) in operations {
-                    self.compile_one(ir_instr, &mut |item| match item {
-                        Ok(instr) => {
-                            span_builder.item(instr_name(&instr));
-                            instrs.push(instr);
-                            traces.push(trace.clone());
-                        }
-                        Err(CompileOneErr::CycleTrackerEnter(name)) => {
-                            span_builder.enter(name);
-                        }
-                        Err(CompileOneErr::CycleTrackerExit) => {
-                            span_builder.exit().unwrap();
-                        }
-                        Err(CompileOneErr::Unsupported(instr)) => {
-                            panic!("unsupported instruction: {instr:?}\nbacktrace: {:?}", trace)
-                        }
-                    });
-                }
-                let cycle_tracker_root_span = span_builder.finish().unwrap();
-                for line in cycle_tracker_root_span.lines() {
-                    tracing::info!("{}", line);
-                }
-            } else {
+            // if debug_mode {
+            //     let mut span_builder =
+            //         SpanBuilder::<_, &'static str>::new("cycle_tracker".to_string());
+            //     for (ir_instr, trace) in operations {
+            //         self.compile_one(ir_instr, &mut |item| match item {
+            //             Ok(instr) => {
+            //                 span_builder.item(instr_name(&instr));
+            //                 instrs.push(instr);
+            //                 traces.push(trace.clone());
+            //             }
+            //             Err(CompileOneErr::CycleTrackerEnter(name)) => {
+            //                 span_builder.enter(name);
+            //             }
+            //             Err(CompileOneErr::CycleTrackerExit) => {
+            //                 span_builder.exit().unwrap();
+            //             }
+            //             Err(CompileOneErr::Unsupported(instr)) => {
+            //                 panic!("unsupported instruction: {instr:?}\nbacktrace: {:?}", trace)
+            //             }
+            //         });
+            //     }
+            //     let cycle_tracker_root_span = span_builder.finish().unwrap();
+            //     for line in cycle_tracker_root_span.lines() {
+            //         tracing::info!("{}", line);
+            //     }
+            // }
+            // else {
                 for (ir_instr, trace) in operations {
                     self.compile_one(ir_instr, &mut |item| match item {
                         Ok(instr) => instrs.push(instr),
@@ -573,7 +621,7 @@ where
                             panic!("unsupported instruction: {instr:?}\nbacktrace: {:?}", trace)
                         }
                     });
-                }
+                // }
             }
             (instrs, traces)
         });

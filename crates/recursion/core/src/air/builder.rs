@@ -6,10 +6,7 @@ use sp1_stark::{
     InteractionKind,
 };
 
-use super::{
-    Block, InstructionCols, MemoryAccessTimestampCols, MemoryCols, OpcodeSelectorCols,
-    RangeCheckOpcode,
-};
+use super::{Block, MemoryAccessTimestampCols, MemoryCols, RangeCheckOpcode};
 
 /// A trait which contains all helper methods for building SP1 recursion machine AIRs.
 pub trait SP1RecursionAirBuilder:
@@ -184,40 +181,6 @@ pub trait RecursionInteractionAirBuilder: BaseAirBuilder {
                 is_real.into(),
                 InteractionKind::Range,
             ),
-            InteractionScope::Global,
-        );
-    }
-
-    fn send_program<E: Into<Self::Expr> + Copy>(
-        &mut self,
-        pc: impl Into<Self::Expr>,
-        instruction: InstructionCols<E>,
-        selectors: OpcodeSelectorCols<E>,
-        is_real: impl Into<Self::Expr>,
-    ) {
-        let program_interaction_vals = once(pc.into())
-            .chain(instruction.into_iter().map(|x| x.into()))
-            .chain(selectors.into_iter().map(|x| x.into()))
-            .collect::<Vec<_>>();
-        self.send(
-            AirInteraction::new(program_interaction_vals, is_real.into(), InteractionKind::Program),
-            InteractionScope::Global,
-        );
-    }
-
-    fn receive_program<E: Into<Self::Expr> + Copy>(
-        &mut self,
-        pc: impl Into<Self::Expr>,
-        instruction: InstructionCols<E>,
-        selectors: OpcodeSelectorCols<E>,
-        is_real: impl Into<Self::Expr>,
-    ) {
-        let program_interaction_vals = once(pc.into())
-            .chain(instruction.into_iter().map(|x| x.into()))
-            .chain(selectors.into_iter().map(|x| x.into()))
-            .collect::<Vec<_>>();
-        self.receive(
-            AirInteraction::new(program_interaction_vals, is_real.into(), InteractionKind::Program),
             InteractionScope::Global,
         );
     }

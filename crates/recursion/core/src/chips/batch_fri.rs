@@ -2,7 +2,7 @@
 
 use core::borrow::Borrow;
 use itertools::Itertools;
-use sp1_core_machine::utils::pad_rows_fixed;
+use sp1_stark::utils::pad_rows_fixed;
 use sp1_stark::air::{BaseAirBuilder, BinomialExtension, MachineAir};
 use std::borrow::BorrowMut;
 use tracing::instrument;
