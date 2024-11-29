@@ -5,7 +5,7 @@ use p3_matrix::dense::RowMajorMatrix;
 use sp1_core_executor::{ByteOpcode, ExecutionRecord, Program};
 use sp1_stark::air::MachineAir;
 
-use crate::utils::zeroed_f_vec;
+use sp1_stark::utils::zeroed_f_vec;
 
 use super::{
     columns::{ByteMultCols, NUM_BYTE_MULT_COLS, NUM_BYTE_PREPROCESSED_COLS},

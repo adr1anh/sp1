@@ -19,7 +19,7 @@ use sp1_stark::{
     Word,
 };
 
-use crate::utils::pad_rows_fixed;
+use sp1_stark::utils::pad_rows_fixed;
 
 /// The number of main trace columns for `BitwiseChip`.
 pub const NUM_BITWISE_COLS: usize = size_of::<BitwiseCols<u8>>();
@@ -230,7 +230,7 @@ mod tests {
     use sp1_core_executor::{events::AluEvent, ExecutionRecord, Opcode};
     use sp1_stark::{air::MachineAir, baby_bear_poseidon2::BabyBearPoseidon2, StarkGenericConfig};
 
-    use crate::utils::{uni_stark_prove, uni_stark_verify};
+    use sp1_stark::utils::{uni_stark_prove, uni_stark_verify};
 
     use super::BitwiseChip;
 

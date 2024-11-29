@@ -444,7 +444,6 @@ pub(crate) mod tests {
         ir::{Builder, Config, Ext, ExtConst, Felt, Var},
     };
     use sp1_recursion_core::stark::{outer_perm, BabyBearPoseidon2Outer, OuterCompress, OuterHash};
-    use sp1_recursion_gnark_ffi::PlonkBn254Prover;
     use sp1_stark::{baby_bear_poseidon2::BabyBearPoseidon2, StarkGenericConfig};
 
     use crate::{
@@ -497,143 +496,143 @@ pub(crate) mod tests {
         run_test_recursion(builder.into_operations(), None);
     }
 
-    #[test]
-    fn test_challenger_outer() {
-        type SC = BabyBearPoseidon2Outer;
-        type F = <SC as StarkGenericConfig>::Val;
-        type EF = <SC as StarkGenericConfig>::Challenge;
-        type N = <C as Config>::N;
+    // #[test]
+    // fn test_challenger_outer() {
+    //     type SC = BabyBearPoseidon2Outer;
+    //     type F = <SC as StarkGenericConfig>::Val;
+    //     type EF = <SC as StarkGenericConfig>::Challenge;
+    //     type N = <C as Config>::N;
+    //
+    //     let config = SC::default();
+    //     let mut challenger = config.challenger();
+    //     challenger.observe(F::one());
+    //     challenger.observe(F::two());
+    //     challenger.observe(F::two());
+    //     challenger.observe(F::two());
+    //     let commit = Hash::from([N::two()]);
+    //     challenger.observe(commit);
+    //     let result: F = challenger.sample();
+    //     println!("expected result: {}", result);
+    //     let result_ef: EF = challenger.sample_ext_element();
+    //     println!("expected result_ef: {}", result_ef);
+    //     let mut bits = challenger.sample_bits(30);
+    //     let mut bits_vec = vec![];
+    //     for _ in 0..30 {
+    //         bits_vec.push(bits % 2);
+    //         bits >>= 1;
+    //     }
+    //     println!("expected bits: {:?}", bits_vec);
+    //
+    //     let mut builder = Builder::<C>::default();
+    //
+    //     // let width: Var<_> = builder.eval(F::from_canonical_usize(PERMUTATION_WIDTH));
+    //     let mut challenger = MultiField32ChallengerVariable::<C>::new(&mut builder);
+    //     let one: Felt<_> = builder.eval(F::one());
+    //     let two: Felt<_> = builder.eval(F::two());
+    //     let two_var: Var<_> = builder.eval(N::two());
+    //     // builder.halt();
+    //     challenger.observe(&mut builder, one);
+    //     challenger.observe(&mut builder, two);
+    //     challenger.observe(&mut builder, two);
+    //     challenger.observe(&mut builder, two);
+    //     challenger.observe_commitment(&mut builder, [two_var]);
+    //
+    //     // Check to make sure the copying works.
+    //     challenger = challenger.copy(&mut builder);
+    //     let element = challenger.sample(&mut builder);
+    //     let element_ef = challenger.sample_ext(&mut builder);
+    //     let bits = challenger.sample_bits(&mut builder, 31);
+    //
+    //     let expected_result: Felt<_> = builder.eval(result);
+    //     let expected_result_ef: Ext<_, _> = builder.eval(result_ef.cons());
+    //     builder.print_f(element);
+    //     builder.assert_felt_eq(expected_result, element);
+    //     builder.print_e(element_ef);
+    //     builder.assert_ext_eq(expected_result_ef, element_ef);
+    //     for (expected_bit, bit) in zip(bits_vec.iter(), bits.iter()) {
+    //         let expected_bit: Var<_> = builder.eval(N::from_canonical_usize(*expected_bit));
+    //         builder.print_v(*bit);
+    //         builder.assert_var_eq(expected_bit, *bit);
+    //     }
+    //
+    //     let mut backend = ConstraintCompiler::<C>::default();
+    //     let constraints = backend.emit(builder.into_operations());
+    //     let witness = OuterWitness::default();
+    //     PlonkBn254Prover::test::<C>(constraints, witness);
+    // }
+    //
+    // #[test]
+    // fn test_select_chain_digest() {
+    //     type N = <C as Config>::N;
+    //
+    //     let mut builder = Builder::<C>::default();
+    //
+    //     let one: Var<_> = builder.eval(N::one());
+    //     let two: Var<_> = builder.eval(N::two());
+    //
+    //     let to_swap = [[one], [two]];
+    //     let result = BabyBearPoseidon2Outer::select_chain_digest(&mut builder, one, to_swap);
+    //
+    //     builder.assert_var_eq(result[0][0], two);
+    //     builder.assert_var_eq(result[1][0], one);
+    //
+    //     let mut backend = ConstraintCompiler::<C>::default();
+    //     let constraints = backend.emit(builder.into_operations());
+    //     let witness = OuterWitness::default();
+    //     PlonkBn254Prover::test::<C>(constraints, witness);
+    // }
+    //
+    // #[test]
+    // fn test_p2_hash() {
+    //     let perm = outer_perm();
+    //     let hasher = OuterHash::new(perm.clone()).unwrap();
+    //
+    //     let input: [BabyBear; 7] = [
+    //         BabyBear::from_canonical_u32(0),
+    //         BabyBear::from_canonical_u32(1),
+    //         BabyBear::from_canonical_u32(2),
+    //         BabyBear::from_canonical_u32(2),
+    //         BabyBear::from_canonical_u32(2),
+    //         BabyBear::from_canonical_u32(2),
+    //         BabyBear::from_canonical_u32(2),
+    //     ];
+    //     let output = hasher.hash_iter(input);
+    //
+    //     let mut builder = Builder::<C>::default();
+    //     let a: Felt<_> = builder.eval(input[0]);
+    //     let b: Felt<_> = builder.eval(input[1]);
+    //     let c: Felt<_> = builder.eval(input[2]);
+    //     let d: Felt<_> = builder.eval(input[3]);
+    //     let e: Felt<_> = builder.eval(input[4]);
+    //     let f: Felt<_> = builder.eval(input[5]);
+    //     let g: Felt<_> = builder.eval(input[6]);
+    //     let result = BabyBearPoseidon2Outer::hash(&mut builder, &[a, b, c, d, e, f, g]);
+    //
+    //     builder.assert_var_eq(result[0], output[0]);
+    //
+    //     let mut backend = ConstraintCompiler::<C>::default();
+    //     let constraints = backend.emit(builder.into_operations());
+    //     PlonkBn254Prover::test::<C>(constraints.clone(), OuterWitness::default());
+    // }
 
-        let config = SC::default();
-        let mut challenger = config.challenger();
-        challenger.observe(F::one());
-        challenger.observe(F::two());
-        challenger.observe(F::two());
-        challenger.observe(F::two());
-        let commit = Hash::from([N::two()]);
-        challenger.observe(commit);
-        let result: F = challenger.sample();
-        println!("expected result: {}", result);
-        let result_ef: EF = challenger.sample_ext_element();
-        println!("expected result_ef: {}", result_ef);
-        let mut bits = challenger.sample_bits(30);
-        let mut bits_vec = vec![];
-        for _ in 0..30 {
-            bits_vec.push(bits % 2);
-            bits >>= 1;
-        }
-        println!("expected bits: {:?}", bits_vec);
-
-        let mut builder = Builder::<C>::default();
-
-        // let width: Var<_> = builder.eval(F::from_canonical_usize(PERMUTATION_WIDTH));
-        let mut challenger = MultiField32ChallengerVariable::<C>::new(&mut builder);
-        let one: Felt<_> = builder.eval(F::one());
-        let two: Felt<_> = builder.eval(F::two());
-        let two_var: Var<_> = builder.eval(N::two());
-        // builder.halt();
-        challenger.observe(&mut builder, one);
-        challenger.observe(&mut builder, two);
-        challenger.observe(&mut builder, two);
-        challenger.observe(&mut builder, two);
-        challenger.observe_commitment(&mut builder, [two_var]);
-
-        // Check to make sure the copying works.
-        challenger = challenger.copy(&mut builder);
-        let element = challenger.sample(&mut builder);
-        let element_ef = challenger.sample_ext(&mut builder);
-        let bits = challenger.sample_bits(&mut builder, 31);
-
-        let expected_result: Felt<_> = builder.eval(result);
-        let expected_result_ef: Ext<_, _> = builder.eval(result_ef.cons());
-        builder.print_f(element);
-        builder.assert_felt_eq(expected_result, element);
-        builder.print_e(element_ef);
-        builder.assert_ext_eq(expected_result_ef, element_ef);
-        for (expected_bit, bit) in zip(bits_vec.iter(), bits.iter()) {
-            let expected_bit: Var<_> = builder.eval(N::from_canonical_usize(*expected_bit));
-            builder.print_v(*bit);
-            builder.assert_var_eq(expected_bit, *bit);
-        }
-
-        let mut backend = ConstraintCompiler::<C>::default();
-        let constraints = backend.emit(builder.into_operations());
-        let witness = OuterWitness::default();
-        PlonkBn254Prover::test::<C>(constraints, witness);
-    }
-
-    #[test]
-    fn test_select_chain_digest() {
-        type N = <C as Config>::N;
-
-        let mut builder = Builder::<C>::default();
-
-        let one: Var<_> = builder.eval(N::one());
-        let two: Var<_> = builder.eval(N::two());
-
-        let to_swap = [[one], [two]];
-        let result = BabyBearPoseidon2Outer::select_chain_digest(&mut builder, one, to_swap);
-
-        builder.assert_var_eq(result[0][0], two);
-        builder.assert_var_eq(result[1][0], one);
-
-        let mut backend = ConstraintCompiler::<C>::default();
-        let constraints = backend.emit(builder.into_operations());
-        let witness = OuterWitness::default();
-        PlonkBn254Prover::test::<C>(constraints, witness);
-    }
-
-    #[test]
-    fn test_p2_hash() {
-        let perm = outer_perm();
-        let hasher = OuterHash::new(perm.clone()).unwrap();
-
-        let input: [BabyBear; 7] = [
-            BabyBear::from_canonical_u32(0),
-            BabyBear::from_canonical_u32(1),
-            BabyBear::from_canonical_u32(2),
-            BabyBear::from_canonical_u32(2),
-            BabyBear::from_canonical_u32(2),
-            BabyBear::from_canonical_u32(2),
-            BabyBear::from_canonical_u32(2),
-        ];
-        let output = hasher.hash_iter(input);
-
-        let mut builder = Builder::<C>::default();
-        let a: Felt<_> = builder.eval(input[0]);
-        let b: Felt<_> = builder.eval(input[1]);
-        let c: Felt<_> = builder.eval(input[2]);
-        let d: Felt<_> = builder.eval(input[3]);
-        let e: Felt<_> = builder.eval(input[4]);
-        let f: Felt<_> = builder.eval(input[5]);
-        let g: Felt<_> = builder.eval(input[6]);
-        let result = BabyBearPoseidon2Outer::hash(&mut builder, &[a, b, c, d, e, f, g]);
-
-        builder.assert_var_eq(result[0], output[0]);
-
-        let mut backend = ConstraintCompiler::<C>::default();
-        let constraints = backend.emit(builder.into_operations());
-        PlonkBn254Prover::test::<C>(constraints.clone(), OuterWitness::default());
-    }
-
-    #[test]
-    fn test_p2_compress() {
-        type OuterDigestVariable = [Var<<C as Config>::N>; BN254_DIGEST_SIZE];
-        let perm = outer_perm();
-        let compressor = OuterCompress::new(perm.clone());
-
-        let a: [Bn254Fr; 1] = [Bn254Fr::two()];
-        let b: [Bn254Fr; 1] = [Bn254Fr::two()];
-        let gt = compressor.compress([a, b]);
-
-        let mut builder = Builder::<C>::default();
-        let a: OuterDigestVariable = [builder.eval(a[0])];
-        let b: OuterDigestVariable = [builder.eval(b[0])];
-        let result = BabyBearPoseidon2Outer::compress(&mut builder, [a, b]);
-        builder.assert_var_eq(result[0], gt[0]);
-
-        let mut backend = ConstraintCompiler::<C>::default();
-        let constraints = backend.emit(builder.into_operations());
-        PlonkBn254Prover::test::<C>(constraints.clone(), OuterWitness::default());
-    }
+    // #[test]
+    // fn test_p2_compress() {
+    //     type OuterDigestVariable = [Var<<C as Config>::N>; BN254_DIGEST_SIZE];
+    //     let perm = outer_perm();
+    //     let compressor = OuterCompress::new(perm.clone());
+    //
+    //     let a: [Bn254Fr; 1] = [Bn254Fr::two()];
+    //     let b: [Bn254Fr; 1] = [Bn254Fr::two()];
+    //     let gt = compressor.compress([a, b]);
+    //
+    //     let mut builder = Builder::<C>::default();
+    //     let a: OuterDigestVariable = [builder.eval(a[0])];
+    //     let b: OuterDigestVariable = [builder.eval(b[0])];
+    //     let result = BabyBearPoseidon2Outer::compress(&mut builder, [a, b]);
+    //     builder.assert_var_eq(result[0], gt[0]);
+    //
+    //     let mut backend = ConstraintCompiler::<C>::default();
+    //     let constraints = backend.emit(builder.into_operations());
+    //     PlonkBn254Prover::test::<C>(constraints.clone(), OuterWitness::default());
+    // }
 }

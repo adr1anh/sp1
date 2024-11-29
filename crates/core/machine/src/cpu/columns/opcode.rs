@@ -6,7 +6,7 @@ use std::{
     vec::IntoIter,
 };
 
-use crate::utils::indices_arr;
+use sp1_stark::utils::indices_arr;
 
 pub const NUM_OPCODE_SELECTOR_COLS: usize = size_of::<OpcodeSelectorCols<u8>>();
 pub const OPCODE_SELECTORS_COL_MAP: OpcodeSelectorCols<usize> = make_selectors_col_map();

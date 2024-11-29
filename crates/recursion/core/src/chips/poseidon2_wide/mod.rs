@@ -105,7 +105,7 @@ pub(crate) mod tests {
     use p3_field::{AbstractField, PrimeField32};
     use p3_symmetric::Permutation;
 
-    use sp1_core_machine::utils::{run_test_machine, setup_logger};
+    use sp1_stark::utils::{run_test_machine, setup_logger};
     use sp1_stark::{baby_bear_poseidon2::BabyBearPoseidon2, inner_perm, StarkGenericConfig};
     use zkhash::ark_ff::UniformRand;
 

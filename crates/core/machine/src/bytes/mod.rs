@@ -13,12 +13,12 @@ use std::marker::PhantomData;
 use itertools::Itertools;
 use p3_field::Field;
 use p3_matrix::dense::RowMajorMatrix;
-
+use sp1_stark::utils::zeroed_f_vec;
 use self::{
     columns::{BytePreprocessedCols, NUM_BYTE_PREPROCESSED_COLS},
     utils::shr_carry,
 };
-use crate::{bytes::trace::NUM_ROWS, utils::zeroed_f_vec};
+use crate::{bytes::trace::NUM_ROWS};
 
 /// The number of different byte operations.
 pub const NUM_BYTE_OPS: usize = 9;

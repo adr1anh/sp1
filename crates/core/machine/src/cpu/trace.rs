@@ -15,9 +15,9 @@ use p3_field::{PrimeField, PrimeField32};
 use p3_matrix::dense::RowMajorMatrix;
 use p3_maybe_rayon::prelude::{ParallelBridge, ParallelIterator, ParallelSlice};
 use tracing::instrument;
-
+use sp1_stark::utils::zeroed_f_vec;
 use super::{columns::NUM_CPU_COLS, CpuChip};
-use crate::{cpu::columns::CpuCols, memory::MemoryCols, utils::zeroed_f_vec};
+use crate::{cpu::columns::CpuCols, memory::MemoryCols};
 
 impl<F: PrimeField32> MachineAir<F> for CpuChip {
     type Record = ExecutionRecord;

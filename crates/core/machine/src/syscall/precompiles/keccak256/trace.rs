@@ -11,7 +11,7 @@ use sp1_core_executor::{
 };
 use sp1_stark::air::MachineAir;
 
-use crate::utils::zeroed_f_vec;
+use sp1_stark::utils::zeroed_f_vec;
 
 use super::{
     columns::{KeccakMemCols, NUM_KECCAK_MEM_COLS},

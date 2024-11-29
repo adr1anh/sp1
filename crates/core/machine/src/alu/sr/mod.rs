@@ -60,12 +60,11 @@ use sp1_core_executor::{
 use sp1_derive::AlignedBorrow;
 use sp1_primitives::consts::WORD_SIZE;
 use sp1_stark::{air::MachineAir, Word};
-
+use sp1_stark::utils::{next_power_of_two, zeroed_f_vec};
 use crate::{
     air::SP1CoreAirBuilder,
     alu::sr::utils::{nb_bits_to_shift, nb_bytes_to_shift},
     bytes::utils::shr_carry,
-    utils::{next_power_of_two, zeroed_f_vec},
 };
 
 /// The number of main trace columns for `ShiftRightChip`.
@@ -521,7 +520,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
     use p3_baby_bear::BabyBear;
     use p3_matrix::dense::RowMajorMatrix;
     use sp1_core_executor::{events::AluEvent, ExecutionRecord, Opcode};

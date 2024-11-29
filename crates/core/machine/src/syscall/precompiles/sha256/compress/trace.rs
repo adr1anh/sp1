@@ -16,7 +16,7 @@ use super::{
     columns::{ShaCompressCols, NUM_SHA_COMPRESS_COLS},
     ShaCompressChip, SHA_COMPRESS_K,
 };
-use crate::utils::pad_rows_fixed;
+use sp1_stark::utils::pad_rows_fixed;
 
 impl<F: PrimeField32> MachineAir<F> for ShaCompressChip {
     type Record = ExecutionRecord;

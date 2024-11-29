@@ -152,7 +152,7 @@ mod tests {
     use sp1_curves::params::{FieldParameters, Limbs};
     use sp1_stark::air::{MachineAir, SP1AirBuilder};
 
-    use crate::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
     use core::{
         borrow::{Borrow, BorrowMut},
         mem::size_of,

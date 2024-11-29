@@ -24,7 +24,6 @@ pub mod operations;
 pub mod program;
 pub mod riscv;
 pub mod syscall;
-pub mod utils;
 
 /// The global version for all components of SP1.
 ///

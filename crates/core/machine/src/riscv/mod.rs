@@ -579,8 +579,6 @@ pub mod tests {
     use crate::{
         io::SP1Stdin,
         riscv::RiscvAir,
-        utils,
-        utils::{prove, run_test, setup_logger},
     };
 
     use sp1_core_executor::{
@@ -589,10 +587,8 @@ pub mod tests {
         },
         Instruction, Opcode, Program,
     };
-    use sp1_stark::{
-        baby_bear_poseidon2::BabyBearPoseidon2, CpuProver, SP1CoreOpts, StarkProvingKey,
-        StarkVerifyingKey,
-    };
+    use sp1_stark::{baby_bear_poseidon2::BabyBearPoseidon2, utils, CpuProver, SP1CoreOpts, StarkProvingKey, StarkVerifyingKey};
+    use sp1_stark::utils::{prove, run_test, setup_logger};
 
     #[test]
     fn test_simple_prove() {

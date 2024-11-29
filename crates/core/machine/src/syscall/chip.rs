@@ -11,7 +11,7 @@ use sp1_core_executor::{events::SyscallEvent, ExecutionRecord, Program};
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{InteractionScope, MachineAir, SP1AirBuilder};
 
-use crate::utils::pad_rows_fixed;
+use sp1_stark::utils::pad_rows_fixed;
 
 /// The number of main trace columns for `SyscallChip`.
 pub const NUM_SYSCALL_COLS: usize = size_of::<SyscallCols<u8>>();

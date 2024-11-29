@@ -767,7 +767,7 @@ pub mod tests {
 
     #[test]
     fn test_dummy_record() {
-        use crate::utils::setup_logger;
+        use sp1_stark::utils::setup_logger;
         use p3_baby_bear::BabyBear;
         use sp1_stark::baby_bear_poseidon2::BabyBearPoseidon2;
         use sp1_stark::CpuProver;

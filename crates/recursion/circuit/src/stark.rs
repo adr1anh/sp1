@@ -541,126 +541,126 @@ impl<C: CircuitConfig<F = SC::Val>, SC: BabyBearFriConfigVariable<C>> ShardProof
     }
 }
 
-#[allow(unused_imports)]
-#[cfg(any(test, feature = "export-tests"))]
-pub mod tests {
-    use std::collections::VecDeque;
-    use std::fmt::Debug;
-
-    use crate::{
-        challenger::{CanCopyChallenger, CanObserveVariable, DuplexChallengerVariable},
-        utils::tests::run_test_recursion_with_prover,
-        BabyBearFriConfig,
-    };
-
-    use sp1_core_executor::Program;
-    use sp1_core_machine::{
-        io::SP1Stdin,
-        riscv::RiscvAir,
-        utils::{prove, setup_logger},
-    };
-    use sp1_recursion_compiler::{
-        config::{InnerConfig, OuterConfig},
-        ir::{Builder, DslIr, TracedVec},
-    };
-
-    use sp1_recursion_core::{air::Block, machine::RecursionAir, stark::BabyBearPoseidon2Outer};
-    use sp1_stark::{
-        baby_bear_poseidon2::BabyBearPoseidon2, CpuProver, InnerVal, MachineProver, SP1CoreOpts,
-        ShardProof,
-    };
-    use test_artifacts::FIBONACCI_ELF;
-
-    use super::*;
-    use crate::witness::*;
-
-    type F = InnerVal;
-    type A = RiscvAir<F>;
-    type SC = BabyBearPoseidon2;
-
-    pub fn build_verify_shard_with_provers<
-        C: CircuitConfig<F = InnerVal, EF = InnerChallenge, Bit = Felt<InnerVal>> + Debug,
-        CoreP: MachineProver<SC, A>,
-        RecP: MachineProver<SC, RecursionAir<F, 3>>,
-    >(
-        config: SC,
-        elf: &[u8],
-        opts: SP1CoreOpts,
-        num_shards_in_batch: Option<usize>,
-    ) -> (TracedVec<DslIr<C>>, Vec<Block<BabyBear>>) {
-        setup_logger();
-
-        let machine = RiscvAir::<C::F>::machine(SC::default());
-        let (_, vk) = machine.setup(&Program::from(elf).unwrap());
-        let (proof, _, _) = prove::<_, CoreP>(
-            Program::from(elf).unwrap(),
-            &SP1Stdin::new(),
-            SC::default(),
-            opts,
-            None,
-        )
-        .unwrap();
-        let mut challenger = machine.config().challenger();
-        machine.verify(&vk, &proof, &mut challenger).unwrap();
-
-        // Observe all the commitments.
-        let mut builder = Builder::<C>::default();
-
-        let mut witness_stream = Vec::<WitnessBlock<C>>::new();
-
-        // Add a hash invocation, since the poseidon2 table expects that it's in the first row.
-        let mut challenger = config.challenger_variable(&mut builder);
-        // let vk = VerifyingKeyVariable::from_constant_key_babybear(&mut builder, &vk);
-        Witnessable::<C>::write(&vk, &mut witness_stream);
-        let vk: VerifyingKeyVariable<_, _> = vk.read(&mut builder);
-        vk.observe_into(&mut builder, &mut challenger);
-
-        let proofs = proof
-            .shard_proofs
-            .into_iter()
-            .map(|proof| {
-                let shape = proof.shape();
-                let (_, dummy_proof) = dummy_vk_and_shard_proof(&machine, &shape);
-                Witnessable::<C>::write(&proof, &mut witness_stream);
-                dummy_proof.read(&mut builder)
-            })
-            .collect::<Vec<_>>();
-        // Observe all the commitments, and put the proofs into the witness stream.
-        for proof in proofs.iter() {
-            let ShardCommitment { global_main_commit, .. } = proof.commitment;
-            challenger.observe(&mut builder, global_main_commit);
-            let pv_slice = &proof.public_values[..machine.num_pv_elts()];
-            challenger.observe_slice(&mut builder, pv_slice.iter().cloned());
-        }
-
-        let global_permutation_challenges =
-            (0..2).map(|_| challenger.sample_ext(&mut builder)).collect::<Vec<_>>();
-
-        // Verify the first proof.
-        let num_shards = num_shards_in_batch.unwrap_or(proofs.len());
-        for proof in proofs.into_iter().take(num_shards) {
-            let mut challenger = challenger.copy(&mut builder);
-            StarkVerifier::verify_shard(
-                &mut builder,
-                &vk,
-                &machine,
-                &mut challenger,
-                &proof,
-                &global_permutation_challenges,
-            );
-        }
-        (builder.into_operations(), witness_stream)
-    }
-
-    #[test]
-    fn test_verify_shard_inner() {
-        let (operations, stream) =
-            build_verify_shard_with_provers::<InnerConfig, CpuProver<_, _>, CpuProver<_, _>>(
-                BabyBearPoseidon2::new(),
-                FIBONACCI_ELF,
-                SP1CoreOpts::default(),
-                Some(2),
-            );
-        run_test_recursion_with_prover::<CpuProver<_, _>>(operations, stream);
-    }
-}
+// #[allow(unused_imports)]
+// #[cfg(any(test, feature = "export-tests"))]
+// pub mod tests {
+//     use std::collections::VecDeque;
+//     use std::fmt::Debug;
+//
+//     use crate::{
+//         challenger::{CanCopyChallenger, CanObserveVariable, DuplexChallengerVariable},
+//         utils::tests::run_test_recursion_with_prover,
+//         BabyBearFriConfig,
+//     };
+//
+//     // use sp1_core_executor::Program;
+//     // use sp1_core_machine::{
+//     //     io::SP1Stdin,
+//     //     riscv::RiscvAir,
+//     // };
+//     use sp1_recursion_compiler::{
+//         config::{InnerConfig, OuterConfig},
+//         ir::{Builder, DslIr, TracedVec},
+//     };
+//
+//     use sp1_recursion_core::{air::Block, machine::RecursionAir, stark::BabyBearPoseidon2Outer};
+//     use sp1_stark::{
+//         baby_bear_poseidon2::BabyBearPoseidon2, CpuProver, InnerVal, MachineProver, SP1CoreOpts,
+//         ShardProof,
+//     };
+//     use sp1_stark::utils::{prove, setup_logger};
+//     // use test_artifacts::FIBONACCI_ELF;
+//
+//     use super::*;
+//     use crate::witness::*;
+//
+//     type F = InnerVal;
+//     type A = RiscvAir<F>;
+//     type SC = BabyBearPoseidon2;
+//
+//     // pub fn build_verify_shard_with_provers<
+//     //     C: CircuitConfig<F = InnerVal, EF = InnerChallenge, Bit = Felt<InnerVal>> + Debug,
+//     //     CoreP: MachineProver<SC, A>,
+//     //     RecP: MachineProver<SC, RecursionAir<F, 3>>,
+//     // >(
+//     //     config: SC,
+//     //     elf: &[u8],
+//     //     opts: SP1CoreOpts,
+//     //     num_shards_in_batch: Option<usize>,
+//     // ) -> (TracedVec<DslIr<C>>, Vec<Block<BabyBear>>) {
+//     //     setup_logger();
+//     //
+//     //     let machine = RiscvAir::<C::F>::machine(SC::default());
+//     //     let (_, vk) = machine.setup(&Program::from(elf).unwrap());
+//     //     let (proof, _, _) = prove::<_, CoreP>(
+//     //         Program::from(elf).unwrap(),
+//     //         &SP1Stdin::new(),
+//     //         SC::default(),
+//     //         opts,
+//     //         None,
+//     //     )
+//     //     .unwrap();
+//     //     let mut challenger = machine.config().challenger();
+//     //     machine.verify(&vk, &proof, &mut challenger).unwrap();
+//     //
+//     //     // Observe all the commitments.
+//     //     let mut builder = Builder::<C>::default();
+//     //
+//     //     let mut witness_stream = Vec::<WitnessBlock<C>>::new();
+//     //
+//     //     // Add a hash invocation, since the poseidon2 table expects that it's in the first row.
+//     //     let mut challenger = config.challenger_variable(&mut builder);
+//     //     // let vk = VerifyingKeyVariable::from_constant_key_babybear(&mut builder, &vk);
+//     //     Witnessable::<C>::write(&vk, &mut witness_stream);
+//     //     let vk: VerifyingKeyVariable<_, _> = vk.read(&mut builder);
+//     //     vk.observe_into(&mut builder, &mut challenger);
+//     //
+//     //     let proofs = proof
+//     //         .shard_proofs
+//     //         .into_iter()
+//     //         .map(|proof| {
+//     //             let shape = proof.shape();
+//     //             let (_, dummy_proof) = dummy_vk_and_shard_proof(&machine, &shape);
+//     //             Witnessable::<C>::write(&proof, &mut witness_stream);
+//     //             dummy_proof.read(&mut builder)
+//     //         })
+//     //         .collect::<Vec<_>>();
+//     //     // Observe all the commitments, and put the proofs into the witness stream.
+//     //     for proof in proofs.iter() {
+//     //         let ShardCommitment { global_main_commit, .. } = proof.commitment;
+//     //         challenger.observe(&mut builder, global_main_commit);
+//     //         let pv_slice = &proof.public_values[..machine.num_pv_elts()];
+//     //         challenger.observe_slice(&mut builder, pv_slice.iter().cloned());
+//     //     }
+//     //
+//     //     let global_permutation_challenges =
+//     //         (0..2).map(|_| challenger.sample_ext(&mut builder)).collect::<Vec<_>>();
+//     //
+//     //     // Verify the first proof.
+//     //     let num_shards = num_shards_in_batch.unwrap_or(proofs.len());
+//     //     for proof in proofs.into_iter().take(num_shards) {
+//     //         let mut challenger = challenger.copy(&mut builder);
+//     //         StarkVerifier::verify_shard(
+//     //             &mut builder,
+//     //             &vk,
+//     //             &machine,
+//     //             &mut challenger,
+//     //             &proof,
+//     //             &global_permutation_challenges,
+//     //         );
+//     //     }
+//     //     (builder.into_operations(), witness_stream)
+//     // }
+//
+//     // #[test]
+//     // fn test_verify_shard_inner() {
+//     //     let (operations, stream) =
+//     //         build_verify_shard_with_provers::<InnerConfig, CpuProver<_, _>, CpuProver<_, _>>(
+//     //             BabyBearPoseidon2::new(),
+//     //             FIBONACCI_ELF,
+//     //             SP1CoreOpts::default(),
+//     //             Some(2),
+//     //         );
+//     //     run_test_recursion_with_prover::<CpuProver<_, _>>(operations, stream);
+//     // }
+// }

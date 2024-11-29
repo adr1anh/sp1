@@ -25,13 +25,12 @@ use sp1_curves::{
 };
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{BaseAirBuilder, InteractionScope, MachineAir, SP1AirBuilder};
-
+use sp1_stark::utils::{limbs_from_prev_access, pad_rows_fixed};
 use crate::{
     memory::{value_as_limbs, MemoryReadCols, MemoryWriteCols},
     operations::field::{
         field_den::FieldDenCols, field_inner_product::FieldInnerProductCols, field_op::FieldOpCols,
     },
-    utils::{limbs_from_prev_access, pad_rows_fixed},
 };
 
 pub const NUM_ED_ADD_COLS: usize = size_of::<EdAddAssignCols<u8>>();
@@ -344,7 +343,7 @@ mod tests {
     use sp1_stark::CpuProver;
     use test_artifacts::{ED25519_ELF, ED_ADD_ELF};
 
-    use crate::utils;
+    use sp1_stark::utils;
 
     #[test]
     fn test_ed_add_simple() {

@@ -3,7 +3,7 @@ use std::{
     mem::size_of,
 };
 
-use crate::utils::{next_power_of_two, zeroed_f_vec};
+use sp1_stark::utils::{next_power_of_two, zeroed_f_vec};
 use p3_air::{Air, BaseAir};
 use p3_field::PrimeField32;
 use p3_matrix::{dense::RowMajorMatrix, Matrix};
@@ -194,10 +194,10 @@ mod tests {
         baby_bear_poseidon2::BabyBearPoseidon2,
         debug_interactions_with_all_chips, InteractionKind, SP1CoreOpts, StarkMachine,
     };
-
+    use sp1_stark::utils::setup_logger;
     use crate::{
         memory::MemoryLocalChip, riscv::RiscvAir,
-        syscall::precompiles::sha256::extend_tests::sha_extend_program, utils::setup_logger,
+        syscall::precompiles::sha256::extend_tests::sha_extend_program,
     };
 
     #[test]

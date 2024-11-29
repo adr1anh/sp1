@@ -4,7 +4,7 @@ use std::{
     mem::size_of,
 };
 
-use crate::{air::MemoryAirBuilder, utils::zeroed_f_vec};
+use crate::{air::MemoryAirBuilder};
 use generic_array::GenericArray;
 use itertools::Itertools;
 use num::{BigUint, Zero};
@@ -22,11 +22,11 @@ use sp1_curves::{
 };
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{BaseAirBuilder, InteractionScope, MachineAir, Polynomial, SP1AirBuilder};
-
+use sp1_stark::utils::{limbs_from_prev_access, pad_rows_fixed, words_to_bytes_le_vec};
+use sp1_stark::utils::zeroed_f_vec;
 use crate::{
     memory::{value_as_limbs, MemoryReadCols, MemoryWriteCols},
     operations::field::field_op::FieldOpCols,
-    utils::{limbs_from_prev_access, pad_rows_fixed, words_to_bytes_le_vec},
 };
 
 pub const fn num_fp_cols<P: FpOpField>() -> usize {

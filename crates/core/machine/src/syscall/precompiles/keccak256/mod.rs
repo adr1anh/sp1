@@ -25,7 +25,7 @@ pub mod permute_tests {
     use sp1_stark::{CpuProver, SP1CoreOpts};
     use test_artifacts::KECCAK_PERMUTE_ELF;
 
-    use crate::utils::{self, run_test};
+    use sp1_stark::utils::{self, run_test};
 
     pub fn keccak_permute_program() -> Program {
         let digest_ptr = 100;

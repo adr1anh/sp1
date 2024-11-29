@@ -153,7 +153,7 @@ mod tests {
     use p3_matrix::dense::RowMajorMatrix;
 
     use crate::stark::BabyBearPoseidon2Outer;
-    use sp1_core_machine::utils::run_test_machine;
+    use sp1_stark::utils::run_test_machine;
     use sp1_stark::{BabyBearPoseidon2Inner, StarkGenericConfig};
 
     use super::*;

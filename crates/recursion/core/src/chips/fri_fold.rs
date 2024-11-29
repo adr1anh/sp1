@@ -354,7 +354,7 @@ where
 mod tests {
     use p3_field::AbstractExtensionField;
     use rand::{rngs::StdRng, Rng, SeedableRng};
-    use sp1_core_machine::utils::setup_logger;
+    use sp1_stark::utils::setup_logger;
     use sp1_stark::{air::MachineAir, StarkGenericConfig};
     use std::mem::size_of;
 

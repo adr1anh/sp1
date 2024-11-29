@@ -2,7 +2,6 @@ use crate::{
     air::MemoryAirBuilder,
     memory::{value_as_limbs, MemoryCols, MemoryReadCols, MemoryWriteCols},
     operations::field::field_op::FieldOpCols,
-    utils::{limbs_from_access, pad_rows_fixed, words_to_bytes_le},
 };
 
 use num::{BigUint, One, Zero};
@@ -28,6 +27,7 @@ use std::{
     mem::size_of,
 };
 use typenum::Unsigned;
+use sp1_stark::utils::{limbs_from_access, pad_rows_fixed, words_to_bytes_le};
 
 /// The number of columns in the U256x2048MulCols.
 const NUM_COLS: usize = size_of::<U256x2048MulCols<u8>>();

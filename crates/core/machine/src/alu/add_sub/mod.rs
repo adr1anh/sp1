@@ -18,10 +18,9 @@ use sp1_stark::{
     air::{MachineAir, SP1AirBuilder},
     Word,
 };
-
+use sp1_stark::utils::{next_power_of_two, zeroed_f_vec};
 use crate::{
     operations::AddOperation,
-    utils::{next_power_of_two, zeroed_f_vec},
 };
 
 /// The number of main trace columns for `AddSubChip`.
@@ -230,7 +229,7 @@ mod tests {
     use sp1_stark::{air::MachineAir, baby_bear_poseidon2::BabyBearPoseidon2, StarkGenericConfig};
 
     use super::AddSubChip;
-    use crate::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
 
     #[test]
     fn generate_trace() {

@@ -36,7 +36,7 @@ pub mod compress_tests {
     use sp1_stark::CpuProver;
     use test_artifacts::SHA_COMPRESS_ELF;
 
-    use crate::utils::{run_test, setup_logger};
+    use sp1_stark::utils::{run_test, setup_logger};
 
     pub fn sha_compress_program() -> Program {
         let w_ptr = 100;

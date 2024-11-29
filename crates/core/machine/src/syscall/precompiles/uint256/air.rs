@@ -6,10 +6,6 @@ use crate::{
 use crate::{
     air::MemoryAirBuilder,
     operations::{field::range::FieldLtCols, IsZeroOperation},
-    utils::{
-        limbs_from_access, limbs_from_prev_access, pad_rows_fixed, words_to_bytes_le,
-        words_to_bytes_le_vec,
-    },
 };
 
 use generic_array::GenericArray;
@@ -36,6 +32,10 @@ use std::{
     mem::size_of,
 };
 use typenum::Unsigned;
+use sp1_stark::utils::{
+    limbs_from_access, limbs_from_prev_access, pad_rows_fixed, words_to_bytes_le,
+    words_to_bytes_le_vec,
+};
 
 /// The number of columns in the Uint256MulCols.
 const NUM_COLS: usize = size_of::<Uint256MulCols<u8>>();

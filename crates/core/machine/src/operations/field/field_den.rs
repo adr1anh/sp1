@@ -155,7 +155,7 @@ mod tests {
 
     use super::{FieldDenCols, Limbs};
 
-    use crate::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
     use core::{
         borrow::{Borrow, BorrowMut},
         mem::size_of,

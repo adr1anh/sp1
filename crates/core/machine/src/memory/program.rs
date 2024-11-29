@@ -17,10 +17,9 @@ use sp1_stark::{
     },
     InteractionKind, Word,
 };
-
+use sp1_stark::utils::{next_power_of_two, pad_rows_fixed, zeroed_f_vec};
 use crate::{
     operations::IsZeroOperation,
-    utils::{next_power_of_two, pad_rows_fixed, zeroed_f_vec},
 };
 
 pub const NUM_MEMORY_PROGRAM_PREPROCESSED_COLS: usize =

@@ -265,7 +265,7 @@ pub mod tests {
         AbstractExtensionField, AbstractField, Field,
     };
     use rand::prelude::*;
-    use sp1_core_machine::utils::run_test_machine;
+    use sp1_stark::utils::run_test_machine;
     use sp1_stark::{baby_bear_poseidon2::BabyBearPoseidon2, StarkGenericConfig};
 
     // TODO expand glob import

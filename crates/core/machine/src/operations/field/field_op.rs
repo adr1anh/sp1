@@ -390,7 +390,7 @@ mod tests {
 
     use super::{FieldOpCols, FieldOperation, Limbs};
 
-    use crate::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
     use core::borrow::{Borrow, BorrowMut};
     use num::bigint::RandBigInt;
     use p3_air::Air;

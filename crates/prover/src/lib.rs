@@ -1060,7 +1060,7 @@ pub mod tests {
     #[cfg(test)]
     use serial_test::serial;
     #[cfg(test)]
-    use sp1_core_machine::utils::setup_logger;
+    use sp1_stark::utils::setup_logger;
     use utils::sp1_vkey_digest_babybear;
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]

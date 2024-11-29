@@ -4,7 +4,7 @@ use core::{
 };
 use std::fmt::Debug;
 
-use crate::{air::MemoryAirBuilder, utils::zeroed_f_vec};
+use crate::{air::MemoryAirBuilder};
 use generic_array::GenericArray;
 use num::{BigUint, One, Zero};
 use p3_air::{Air, AirBuilder, BaseAir};
@@ -27,14 +27,14 @@ use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{BaseAirBuilder, InteractionScope, MachineAir, Polynomial, SP1AirBuilder};
 use std::marker::PhantomData;
 use typenum::Unsigned;
-
+use sp1_stark::utils::{bytes_to_words_le_vec, limbs_from_access, limbs_from_prev_access, pad_rows_fixed};
+use sp1_stark::utils::zeroed_f_vec;
 use crate::{
     memory::{MemoryReadCols, MemoryReadWriteCols},
     operations::field::{
         field_inner_product::FieldInnerProductCols, field_op::FieldOpCols,
         field_sqrt::FieldSqrtCols, range::FieldLtCols,
     },
-    utils::{bytes_to_words_le_vec, limbs_from_access, limbs_from_prev_access, pad_rows_fixed},
 };
 
 pub const fn num_weierstrass_decompress_cols<P: FieldParameters + NumWords>() -> usize {
@@ -540,7 +540,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{io::SP1Stdin, utils};
+    use crate::{io::SP1Stdin};
     use amcl::{
         bls381::bls381::{basic::key_pair_generate_g2, utils::deserialize_g1},
         rand::RAND,
@@ -548,12 +548,12 @@ mod tests {
     use elliptic_curve::sec1::ToEncodedPoint;
     use rand::{thread_rng, Rng};
     use sp1_core_executor::Program;
-    use sp1_stark::CpuProver;
+    use sp1_stark::{utils, CpuProver};
     use test_artifacts::{
         BLS12381_DECOMPRESS_ELF, SECP256K1_DECOMPRESS_ELF, SECP256R1_DECOMPRESS_ELF,
     };
 
-    use crate::utils::run_test_io;
+    use sp1_stark::utils::run_test_io;
 
     #[test]
     fn test_weierstrass_bls_decompress() {

@@ -19,7 +19,7 @@ use sp1_stark::{
     Word,
 };
 
-use crate::utils::{next_power_of_two, zeroed_f_vec};
+use sp1_stark::utils::{next_power_of_two, zeroed_f_vec};
 
 /// The number of main trace columns for `LtChip`.
 pub const NUM_LT_COLS: usize = size_of::<LtCols<u8>>();
@@ -457,7 +457,7 @@ where
 #[cfg(test)]
 mod tests {
 
-    use crate::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{uni_stark_prove as prove, uni_stark_verify as verify};
     use p3_baby_bear::BabyBear;
     use p3_matrix::dense::RowMajorMatrix;
     use sp1_core_executor::{events::AluEvent, ExecutionRecord, Opcode};

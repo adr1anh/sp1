@@ -16,10 +16,9 @@ use sp1_stark::{
     },
     InteractionKind, Word,
 };
-
+use sp1_stark::utils::pad_rows_fixed;
 use crate::{
     operations::{AssertLtColsBits, BabyBearBitDecomposition, IsZeroOperation},
-    utils::pad_rows_fixed,
 };
 
 use super::MemoryChipType;
@@ -365,7 +364,6 @@ mod tests {
     use super::*;
     use crate::{
         riscv::RiscvAir, syscall::precompiles::sha256::extend_tests::sha_extend_program,
-        utils::setup_logger,
     };
     use p3_baby_bear::BabyBear;
     use sp1_core_executor::{programs::tests::simple_program, Executor};
@@ -373,6 +371,7 @@ mod tests {
         baby_bear_poseidon2::BabyBearPoseidon2, debug_interactions_with_all_chips, SP1CoreOpts,
         StarkMachine,
     };
+    use sp1_stark::utils::setup_logger;
 
     #[test]
     fn test_memory_generate_trace() {

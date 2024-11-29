@@ -20,14 +20,14 @@ mod tests {
     use sp1_stark::{
         air::MachineAir, baby_bear_poseidon2::BabyBearPoseidon2, CpuProver, StarkGenericConfig,
     };
+    use sp1_stark::utils::{self, run_test_io, uni_stark_prove as prove, uni_stark_verify as verify, words_to_bytes_le_vec};
     use test_artifacts::U256XU2048_MUL_ELF;
 
     use crate::{
         io::SP1Stdin,
-        utils::{self, run_test_io, uni_stark_prove as prove, uni_stark_verify as verify},
     };
     use crate::{
-        syscall::precompiles::u256x2048_mul::air::U256x2048MulChip, utils::words_to_bytes_le_vec,
+        syscall::precompiles::u256x2048_mul::air::U256x2048MulChip,
     };
 
     fn generate_test_execution_record(pass: bool) -> ExecutionRecord {

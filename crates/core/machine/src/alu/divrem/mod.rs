@@ -76,11 +76,10 @@ use sp1_core_executor::{
 use sp1_derive::AlignedBorrow;
 use sp1_primitives::consts::WORD_SIZE;
 use sp1_stark::{air::MachineAir, Word};
-
+use sp1_stark::utils::pad_rows_fixed;
 use crate::{
     air::SP1CoreAirBuilder,
     operations::{IsEqualWordOperation, IsZeroWordOperation},
-    utils::pad_rows_fixed,
 };
 
 /// The number of main trace columns for `DivRemChip`.
@@ -832,7 +831,7 @@ where
 #[cfg(test)]
 mod tests {
 
-    use crate::utils::{uni_stark_prove, uni_stark_verify};
+    use sp1_stark::utils::{uni_stark_prove, uni_stark_verify};
     use p3_baby_bear::BabyBear;
     use p3_matrix::dense::RowMajorMatrix;
     use sp1_core_executor::{events::AluEvent, ExecutionRecord, Opcode};

@@ -25,11 +25,10 @@ use sp1_curves::{
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{BaseAirBuilder, InteractionScope, MachineAir, SP1AirBuilder};
 use typenum::U32;
-
+use sp1_stark::utils::{limbs_from_access, limbs_from_prev_access, pad_rows_fixed};
 use crate::{
     memory::{MemoryReadCols, MemoryWriteCols},
     operations::field::{field_op::FieldOpCols, field_sqrt::FieldSqrtCols, range::FieldLtCols},
-    utils::{limbs_from_access, limbs_from_prev_access, pad_rows_fixed},
 };
 
 pub const NUM_ED_DECOMPRESS_COLS: usize = size_of::<EdDecompressCols<u8>>();
@@ -300,7 +299,7 @@ pub mod tests {
     use sp1_stark::CpuProver;
     use test_artifacts::ED_DECOMPRESS_ELF;
 
-    use crate::utils;
+    use sp1_stark::utils;
 
     #[test]
     fn test_ed_decompress() {

@@ -4,7 +4,7 @@ use core::{
 };
 use std::{fmt::Debug, marker::PhantomData};
 
-use crate::{air::MemoryAirBuilder, utils::zeroed_f_vec};
+use crate::{air::MemoryAirBuilder};
 use generic_array::GenericArray;
 use num::{BigUint, One, Zero};
 use p3_air::{Air, AirBuilder, BaseAir};
@@ -26,11 +26,10 @@ use sp1_curves::{
 };
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{InteractionScope, MachineAir, SP1AirBuilder};
-
+use sp1_stark::utils::{limbs_from_prev_access, zeroed_f_vec};
 use crate::{
     memory::{MemoryCols, MemoryWriteCols},
     operations::field::field_op::FieldOpCols,
-    utils::limbs_from_prev_access,
 };
 
 pub const fn num_weierstrass_double_cols<P: FieldParameters + NumWords>() -> usize {
@@ -498,7 +497,7 @@ pub mod tests {
         BLS12381_DOUBLE_ELF, BN254_DOUBLE_ELF, SECP256K1_DOUBLE_ELF, SECP256R1_DOUBLE_ELF,
     };
 
-    use crate::utils::{run_test, setup_logger};
+    use sp1_stark::utils::{run_test, setup_logger};
 
     #[test]
     fn test_secp256k1_double_simple() {

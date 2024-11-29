@@ -179,7 +179,7 @@ where
 #[cfg(test)]
 mod tests {
     use rand::{rngs::StdRng, Rng, SeedableRng};
-    use sp1_core_machine::utils::setup_logger;
+    use sp1_stark::utils::setup_logger;
 
     use sp1_stark::{air::MachineAir, StarkGenericConfig};
     use std::{array, borrow::Borrow};

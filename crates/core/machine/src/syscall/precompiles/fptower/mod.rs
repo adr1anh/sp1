@@ -16,7 +16,7 @@ mod tests {
         BN254_FP2_MUL_ELF, BN254_FP_ELF,
     };
 
-    use crate::utils;
+    use sp1_stark::utils;
 
     #[test]
     fn test_bls12381_fp_ops() {

@@ -143,7 +143,7 @@ mod tests {
 
     use super::{FieldInnerProductCols, Limbs};
 
-    use crate::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
+    use sp1_stark::utils::{pad_to_power_of_two, uni_stark_prove as prove, uni_stark_verify as verify};
     use core::{
         borrow::{Borrow, BorrowMut},
         mem::size_of,

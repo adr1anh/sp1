@@ -1,6 +1,16 @@
-// TODO(adr1anh): only keep some of this stuff
+pub mod concurrency;
+mod logger;
+mod prove;
+mod span;
+mod tracer;
 
-// use p3_maybe_rayon::prelude::ParallelBridge;
+pub use logger::*;
+use p3_field::Field;
+pub use prove::*;
+pub use span::*;
+pub use tracer::*;
+
+// use p3_maybe_rayon::prelude::{ParallelBridge, ParallelIterator};
 
 pub const fn indices_arr<const N: usize>() -> [usize; N] {
     let mut indices_arr = [0; N];
@@ -29,7 +39,7 @@ pub fn pad_to_power_of_two<const N: usize, T: Clone + Default>(values: &mut Vec<
 //     let sized = vec.try_into().unwrap_or_else(|_| panic!("failed to convert to limbs"));
 //     Limbs(sized)
 // }
-//
+
 // pub fn limbs_from_access<T: Copy, N: ArrayLength, M: MemoryCols<T>>(cols: &[M]) -> Limbs<T, N> {
 //     let vec = cols.iter().flat_map(|access| access.value().0).collect::<Vec<T>>();
 //
@@ -170,3 +180,25 @@ pub fn log2_strict_usize(n: usize) -> usize {
 //         },
 //     );
 // }
+
+/// Returns whether the `SP1_DEBUG` environment variable is enabled or disabled.
+///
+/// This variable controls whether backtraces are attached to compiled circuit programs, as well
+/// as whether cycle tracking is performed for circuit programs.
+///
+/// By default, the variable is disabled.
+pub fn sp1_debug_mode() -> bool {
+    let value = std::env::var("SP1_DEBUG").unwrap_or_else(|_| "false".to_string());
+    value == "1" || value.to_lowercase() == "true"
+}
+
+/// Returns a vector of zeros of the given length. This is faster than vec![F::zero(); len] which
+/// requires copying.
+///
+/// This function is safe to use only for fields that can be transmuted from 0u32.
+pub fn zeroed_f_vec<F: Field>(len: usize) -> Vec<F> {
+    debug_assert!(std::mem::size_of::<F>() == 4);
+
+    let vec = vec![0u32; len];
+    unsafe { std::mem::transmute::<Vec<u32>, Vec<F>>(vec) }
+}

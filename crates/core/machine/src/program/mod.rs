@@ -6,7 +6,6 @@ use std::collections::HashMap;
 
 use crate::{
     air::ProgramAirBuilder,
-    utils::{next_power_of_two, pad_rows_fixed, zeroed_f_vec},
 };
 use p3_air::{Air, BaseAir, PairBuilder};
 use p3_field::PrimeField;
@@ -15,7 +14,7 @@ use p3_maybe_rayon::prelude::{ParallelBridge, ParallelIterator};
 use sp1_core_executor::{ExecutionRecord, Program};
 use sp1_derive::AlignedBorrow;
 use sp1_stark::air::{MachineAir, SP1AirBuilder};
-
+use sp1_stark::utils::{next_power_of_two, pad_rows_fixed, zeroed_f_vec};
 use crate::cpu::columns::{InstructionCols, OpcodeSelectorCols};
 
 /// The number of preprocessed program columns.
